@@ -1,0 +1,52 @@
+{
+  "name": "cypress",
+  "version": "1.0.0",
+  "description": "e2e web/api cypress transaction core",
+  "main": "index.js",
+  "scripts": {
+    "lint": "eslint ./cypress/**/*.ts",
+    "format": "prettier . --write",
+    "pretest": "rimraf -r ./reports/* && rimraf -r ./screenshots/* && rimraf -r cypress/videos/*",
+    "test:cy": "cypress run --browser=chrome --env tags=@test",
+    "test:debug": "cypress run --headed --browser=chrome --env tags=@debug",
+    "posttest": "node cucumber-html-report.js",
+    "create:report": "mochawesome-merge ./reports/*.json > ./report1.json && marge report1.json --reportDir ./reports && rimraf report1.json",
+    "open:report": "open ./reports/report1.html",
+    "json:report": "mochawesome-merge ./reports/*.json > ./reports/report1.json && marge ./reports/report1.json --reportDir ./reports"
+  },
+  "keywords": [],
+  "author": "Your Name",
+  "license": "ISC",
+  "devDependencies": {
+    "@badeball/cypress-cucumber-preprocessor": "^16.0.3",
+    "@bahmutov/cypress-esbuild-preprocessor": "^2.2.0",
+    "@types/pg": "^8.10.2",
+    "@typescript-eslint/eslint-plugin": "^6.2.0",
+    "@typescript-eslint/parser": "^6.2.0",
+    "chai-json-schema": "^1.5.1",
+    "cypress": "12.7.0",
+    "cypress-file-upload": "^5.0.8",
+    "cypress-iframe": "^1.0.1",
+    "cypress-multi-reporters": "^1.6.2",
+    "cypress-real-events": "^1.7.6",
+    "cypress-testrail": "^2.7.1",
+    "del": "^8.0.0",
+    "dotenv": "^16.0.3",
+    "esbuild": "^0.17.16",
+    "eslint": "^8.46.0",
+    "eslint-plugin-cypress": "^2.12.1",
+    "mochawesome": "^7.1.3",
+    "mochawesome-merge": "^4.2.1",
+    "mochawesome-report-generator": "^6.2.0",
+    "multiple-cucumber-html-reporter": "^3.1.0",
+    "pg": "^8.8.0",
+    "prettier": "^3.0.0",
+    "rimraf": "^6.0.1",
+    "typescript": "^5.1.6"
+  },
+  "cypress-cucumber-preprocessor": {
+    "stepDefinitions": "cypress/support/stepDefinitions/**/*.{js,ts}",
+    "filterSpecs": true,
+    "omitFiltered": true
+  }
+}

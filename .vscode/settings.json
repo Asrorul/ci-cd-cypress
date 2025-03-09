@@ -1,0 +1,24 @@
+{
+    "cucumberautocomplete.steps": [
+        "cypress/support/stepDefinitions/*.ts",
+ 
+    ],
+    "cucumberautocomplete.syncfeatures": "cypress/e2e/features/*.feature",
+    "cucumberautocomplete.strictGherkinCompletion": false,
+    "cucumberautocomplete.smartSnippets": true,
+    "cucumberautocomplete.stepsInvariants": true,
+    "editor.formatOnSave": true,
+    "files.associations": {
+        "*.feature": "cucumber"
+    },
+    "workbench.iconTheme": "material-icon-theme",
+    "material-icon-theme.files.associations": {
+        "*.feature": "cucumber"
+    },
+    "cucumber.glue": [
+        "cypress/support/stepDefinitions/*.ts",
+    ],
+    "cucumber.features": [
+        "cypress/e2e/features/*.feature"
+    ]
+}

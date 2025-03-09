@@ -1,0 +1,11 @@
+{
+    "recommendations": [
+        "cucumber.cucumber-official",
+        "alexkrechik.cucumberautocomplete",
+        "dbaeumer.vscode-eslint",
+        "esbenp.prettier-vscode",
+        "cypress-io.cypress",
+        "PKief.material-icon-theme",
+        "vscode-icons-team.vscode-icons"
+    ]
+}
