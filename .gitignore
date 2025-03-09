@@ -3,3 +3,4 @@ reports/
 cypress/videos/
 cypress/screenshots/
 .DS_Store
+.env
