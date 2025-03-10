@@ -1,10 +1,18 @@
-# This workflow will do a clean installation of node dependencies, cache/restore them, build the source code and run tests across different versions of node
-# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-nodejs
-
 name: Node.js CI
 
 on:
   workflow_dispatch:
+    inputs:
+      generateReport:
+        description: 'Generate Mochawesome Report'
+        type: boolean
+        default: false
+        required: true
+      recordVideo:
+        description: 'Record Test Videos'
+        type: boolean
+        default: false
+        required: true
   push:
     branches: [ "main" ]
   pull_request:
@@ -12,13 +20,11 @@ on:
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
 
     strategy:
       matrix:
         node-version: [20.x]
-        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
 
     steps:
     - uses: actions/checkout@v4
@@ -28,5 +34,48 @@ jobs:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
     - run: npm ci
+    
+    # Set video configuration based on input
+    - name: Configure Cypress Video Recording
+      run: |
+        if [[ "${{ github.event_name }}" == "workflow_dispatch" && "${{ github.event.inputs.recordVideo }}" == "true" ]]; then
+          echo "Setting video to true in cypress.config.ts"
+          sed -i 's/video: false/video: true/' cypress.config.ts
+        else
+          echo "Setting video to false in cypress.config.ts"
+          sed -i 's/video: true/video: false/' cypress.config.ts
+        fi
+
     - run: npm run build --if-present
     - run: npm run test:cy
+
+    # Generate report only if requested via workflow_dispatch
+    - name: Generate Mochawesome Report
+      if: github.event_name == 'workflow_dispatch' && github.event.inputs.generateReport == 'true'
+      run: npm run create:report
+
+    # Upload videos only if recording was enabled and tests failed
+    - name: Upload Cypress Videos
+      uses: actions/upload-artifact@v4
+      if: |
+        failure() && 
+        github.event_name == 'workflow_dispatch' && 
+        github.event.inputs.recordVideo == 'true'
+      with:
+        name: cypress-videos
+        path: cypress/videos
+        if-no-files-found: ignore
+
+    # Upload reports only if they were generated
+    - name: Upload Screenshots and Reports
+      uses: actions/upload-artifact@v4
+      if: |
+        always() && 
+        github.event_name == 'workflow_dispatch' && 
+        github.event.inputs.generateReport == 'true'
+      with:
+        name: cypress-evidence
+        path: |
+          cypress/screenshots
+          reports
+        if-no-files-found: ignore
