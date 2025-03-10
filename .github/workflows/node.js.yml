@@ -54,13 +54,10 @@ jobs:
       if: github.event_name == 'workflow_dispatch' && github.event.inputs.generateReport == 'true'
       run: npm run create:report
 
-    # Upload videos only if recording was enabled and tests failed
+    # Upload videos based only on input parameter
     - name: Upload Cypress Videos
       uses: actions/upload-artifact@v4
-      if: |
-        failure() && 
-        github.event_name == 'workflow_dispatch' && 
-        github.event.inputs.recordVideo == 'true'
+      if: github.event_name == 'workflow_dispatch' && github.event.inputs.recordVideo == 'true'
       with:
         name: cypress-videos
         path: cypress/videos
